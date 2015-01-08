@@ -83,29 +83,29 @@ The available "auto colors" tags are:
 
 Methods of Class instances try to return sane data, such as:
 
-.. code:: python
+.. code:: pycon
 
-    from colorclass import Color
-    color_string = Color('{red}Test{/red}')
+    >>> from colorclass import Color
+    >>> color_string = Color('{red}Test{/red}')
     
-    color_string
+    >>> color_string
     u'\x1b[31mTest\x1b[39m'
     
-    len(color_string)
+    >>> len(color_string)
     4
     
-    color_string.istitle()
+    >>> color_string.istitle()
     True
 
 
 There are also a couple of helper attributes for all Color instances:
 
-.. code:: python
+.. code:: pycon
 
-    color_string.value_colors
+    >>> color_string.value_colors
     '\x1b[31mTest\x1b[39m'
     
-    color_string.value_no_colors
+    >>> color_string.value_no_colors
     'Test'
 
 
