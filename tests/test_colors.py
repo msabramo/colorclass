@@ -4,6 +4,8 @@ import sys
 
 from colorclass import Color
 
+from tests.utils import u
+
 
 class Default(dict):
     def __missing__(self, key):
@@ -43,9 +45,9 @@ def test_encode_decode():
             Color(decode('{red}ä{/red}{green}öüß{/green}')).encode('utf-8').decode('utf-8'))
     assert 4 == len(Color(decode('{red}ä{/red}{green}öüß{/green}')).encode('utf-8').decode('utf-8'))
 
-    assert (u'\033[31m\ua000abcd\u07b4\033[39m'.encode('utf-8').decode('utf-8') ==
-            Color(u'{red}\ua000abcd\u07b4{/red}'.encode('utf-8').decode('utf-8')).encode('utf-8').decode('utf-8'))
-    assert 6 == len(Color(u'{red}\ua000abcd\u07b4{/red}'.encode('utf-8').decode('utf-8')).encode('utf-8')
+    assert (b'\x1b[31m\xea\x80\x80abcd\xde\xb4\x1b[39m'.decode('utf-8') ==
+            Color(b'{red}\xea\x80\x80abcd\xde\xb4{/red}'.decode('utf-8')).encode('utf-8').decode('utf-8'))
+    assert 6 == len(Color(b'{red}\xea\x80\x80abcd\xde\xb4{/red}'.decode('utf-8')).encode('utf-8')
                     .decode('utf-8'))
 
 
@@ -75,12 +77,12 @@ def test_common():
     assert Color('{red}a{/red}').isalpha()
     assert not Color('{red}a1{/red}').isalpha()
     assert Color('{red}1').isdecimal()
-    assert not Color(u'{red}⅕{/red}').isdecimal()
-    assert Color(u'{red}²{/red}').isdigit()
-    assert not Color(u'{red}⅕{/red}').isdigit()
+    assert not Color(u('{red}⅕{/red}')).isdecimal()
+    assert Color(u('{red}\N{SUPERSCRIPT TWO}{/red}')).isdigit()
+    assert not Color(u('{red}\N{VULGAR FRACTION ONE FIFTH}{/red}')).isdigit()
     assert Color('{red}a{/red}').islower()
     assert not Color('{red}A{/red}').islower()
-    assert Color(u'{red}⅕{/red}').isnumeric()
+    assert Color(u('{red}\N{VULGAR FRACTION ONE FIFTH}{/red}')).isnumeric()
     assert not Color('{red}A{/red}').isnumeric()
     assert Color('{red}    {/red}').isspace()
     assert not Color('{red}    x{/red}').isspace()

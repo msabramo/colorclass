@@ -4,6 +4,8 @@ import sys
 
 from colorclass import Color
 
+from tests.utils import u
+
 
 class Default(dict):
     def __missing__(self, key):
@@ -41,9 +43,9 @@ def test_encode_decode():
     assert decode('äöüß') == Color(decode('äöüß')).encode('utf-8').decode('utf-8')
     assert 4 == len(Color(decode('äöüß')).encode('utf-8').decode('utf-8'))
 
-    assert (u'\ua000abcd\u07b4'.encode('utf-8').decode('utf-8') ==
-            Color(u'\ua000abcd\u07b4'.encode('utf-8').decode('utf-8')).encode('utf-8').decode('utf-8'))
-    assert 6 == len(Color(u'\ua000abcd\u07b4'.encode('utf-8').decode('utf-8')).encode('utf-8').decode('utf-8'))
+    assert (u('\ua000abcd\u07b4').encode('utf-8').decode('utf-8') ==
+            Color(u('\ua000abcd\u07b4').encode('utf-8').decode('utf-8')).encode('utf-8').decode('utf-8'))
+    assert 6 == len(Color(u('\ua000abcd\u07b4').encode('utf-8').decode('utf-8')).encode('utf-8').decode('utf-8'))
 
 
 def test_common():
@@ -68,12 +70,12 @@ def test_common():
     assert Color('a').isalpha()
     assert not Color('a1').isalpha()
     assert Color('1').isdecimal()
-    assert not Color(u'⅕').isdecimal()
-    assert Color(u'²').isdigit()
-    assert not Color(u'⅕').isdigit()
+    assert not Color(u('⅕')).isdecimal()
+    assert Color(u('\N{SUPERSCRIPT TWO}')).isdigit()
+    assert not Color(u('\N{VULGAR FRACTION ONE FIFTH}')).isdigit()
     assert Color('a').islower()
     assert not Color('A').islower()
-    assert Color(u'⅕').isnumeric()
+    assert Color(u('\N{VULGAR FRACTION ONE FIFTH}')).isnumeric()
     assert not Color('A').isnumeric()
     assert Color('    ').isspace()
     assert not Color('    x').isspace()
