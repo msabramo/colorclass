@@ -126,7 +126,9 @@ def test_py3():
     #assert '' == Color(b'', 'latin-1')  bytes has no .format().
     #assert 'abc' == Color(b'\x80abc', errors='ignore')
 
-    assert 'ss' == Color('ß').casefold()
+    if hasattr(str, 'casefold'):
+        assert 'ss' == Color('ß').casefold()
+
     assert 'Guido was born in country' == Color('{name} was born in {country}').format_map(Default(name='Guido'))
 
     assert Color('var').isidentifier()
